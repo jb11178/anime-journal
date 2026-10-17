@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+    {{ media_type|capitalize }} | Anime Journal
+
+{% endblock %}
+
+{% block styles %}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/library/library.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/library/list.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/library/gallery.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/library/showcase.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/customization.css') }}">
+
+{% endblock %}
+
+
+
+
+{% block content %}
+
+        <main class="page-content">
+
+            <section class="library-header">
+
+                <div>
+                    <h1>My {{ media_type|capitalize }}</h1>
+                    <p>Your personal {{ media_type }} library</p>
+                </div>
+
+                <div class="library-actions">
+                    <a class="primary-button" href="{{ url_for('search', type=media_type) }}">Add {{ media_type|capitalize }}</a>
+                    <button class="secondary-button" id="customize-button">Customize</button>
+                </div>
+
+            </section>
+
+            <div class="customization-panel" id="customization-panel">
+
+                <div class="customization-header">
+                    <h2>Customize Library</h2>
+                    <button id="close-customization">×</button>
+                </div>
+
+                <div class="customization-section">
+                    <h3>Layout</h3>
+
+                    <div class="layout-options">
+                        <button class="layout-option active" data-layout="list">List</button>
+                        <button class="layout-option" data-layout="gallery">Gallery</button>
+                        <button class="layout-option" data-layout="showcase">Showcase</button>
+                    </div>
+
+                    <section class="customization-section density-section">
+                        <h3>Density</h3>
+
+                        <div class="density-options">
+                            <button class="density-option" data-density="compact">Compact</button>
+                            <button class="density-option active" data-density="comfortable">Comfortable</button>
+                            <button class="density-option" data-density="spacious">Spacious</button>
+                        </div>
+
+                        <div class="sorting-options">
+
+                            <div class="sorting-option">
+                                <label for="sort-library">Sort by</label>
+
+                                <select id="sort-library" class="customization-select">
+                                    <option value="title">Title</option>
+                                    <option value="score-high">Score: High to Low</option>
+                                    <option value="score-low">Score: Low to High</option>
+                                </select>
+                            </div>
+
+                            <div class="sorting-option">
+                                <label for="filter-status">Status</label>
+
+                                <select id="filter-status" class="customization-select">
+                                    <option value="all">All</option>
+
+                                    {% if media_type == 'anime' %}
+                                        <option value="watching">Watching</option>
+                                        <option value="completed">Completed</option>
+                                        <option value="on-hold">On Hold</option>
+                                        <option value="dropped">Dropped</option>
+                                        <option value="plan-to-watch">Plan to Watch</option>
+                                    {% else %}
+                                        <option value="reading">Reading</option>
+                                        <option value="completed">Completed</option>
+                                        <option value="on-hold">On Hold</option>
+                                        <option value="dropped">Dropped</option>
+                                        <option value="plan-to-read">Plan to Read</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+                            
+                        </div>
+
+                    </section>
+
+
+                    <section class="customization-section display-section">
+                        <h3>Display</h3>
+
+                        <label class="display-option">
+                            <span>Status</span>
+                            <input type="checkbox" data-display="status" checked>
+                        </label>
+
+                        <label class="display-option">
+                            <span>Score</span>
+                            <input type="checkbox" data-display="score" checked>
+                        </label>
+
+                        <label class="display-option">
+                            <span>Progress Info</span>
+                            <input type="checkbox" data-display="progress-info" checked>
+                        </label>
+
+                        <label class="display-option">
+                            <span>Rank</span>
+                            <input type="checkbox" data-display="rank" checked>
+                        </label>
+                    </section>
+                    
+
+                </div>
+
+            </div>
+
+            <section class="media-library list-layout density-comfortable" id="media-library" data-media-type="{{ media_type }}">
+
+                <div class="list-header">
+                    <span class="rank-column">#</span>
+                    <span class="title-column">Title</span>
+                    <span class="status-column">Status</span>
+                    <span class="score-column">Score</span>
+                </div>
+
+                {% for entry in library_entries %}
+                    <div 
+                        class="media-entry" 
+                        data-title="{{ entry['title'] }}"
+                        data-score="{{ entry['score'] if entry['score'] is not none else '' }}"
+                        data-status="{{ entry['status'] }}"
+                        data-banner-image="{{ entry['banner_image'] or '' }}"
+                        data-cover-image="{{ entry['cover_image'] or '' }}">
+
+                        <div class="rank-column">{{ loop.index }}</div>
+
+                        <div class="title-column media-title">
+
+                            <img class="media-cover" src="{{ entry['cover_image'] }}" alt="{{ entry['title'] }} cover">
+
+                            <div class="media-title-info">
+                                <a href="{{ url_for('media', media_type=media_type, anilist_id=entry['anilist_id']) }}">{{ entry["title"] }}</a>
+                                <span>
+                                    {% if media_type == "anime" %}
+                                        {{ entry["progress"] }} / {{ entry["total_progress"] if entry["total_progress"] is not none else "?" }} Episodes
+                                    {% else %}
+                                        {{ entry["progress"] }} / {{ entry["total_progress"] if entry["total_progress"] is not none else "?" }} Chapters
+                                    {% endif %}
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="status-column">
+                            <span class="status {{ entry['status'] }}">{{ entry["status"] | replace("-", " ") | title }}</span>
+                        </div>
+
+                        <div class="score-column">
+                            <span class="score">
+                                {% if entry["score"] is not none %}
+                                    {{ "%.1f"|format(entry["score"]) }}
+                                {% else %}
+                                    Unrated
+                                {% endif %}
+                            </span>
+                        </div>
+
+                    </div>
+                {% endfor %}
+
+
+            </section>
+
+        </main>
+
+{% endblock %}
+
+
+
+
+{% block scripts %}
+
+    <script src="{{ url_for('static', filename='js/library.js') }}"></script>
+
+{% endblock %}

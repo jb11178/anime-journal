@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+    Find Characters
+
+{% endblock %}
+
+{% block styles %}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/character-search.css') }}">
+
+{% endblock %}
+
+
+
+
+{% block content %}
+
+    <main class="character-search-page">
+
+        <section class="character-search-header">
+            <h1>Discover Characters</h1>
+
+            <p>Find characters from your favorite anime and manga to add to your personal collection.</p>
+
+            <form class="character-search-form" action="{{ url_for('character_search') }}" method="GET">
+                <div class="character-search-input-wrapper">
+                    <i class="icon icon-search"></i>
+
+                    <input type="text" name="q" value="{{ search_term }}" placeholder="Search characters..." aria-label="Search characters">
+                </div>
+                
+                <button class="primary-button" type="submit">Search</button>
+            </form>
+        </section>
+
+        <section class="character-search-results">
+
+            {% for result in character_results %}
+                {% set character = result["character"] %}
+
+                    <article class="character-search-result">
+
+                        <img src="{{ character['image']['large'] }}" alt="{{ character['name']['full'] }}">
+
+                        <div class="character-search-result-info">
+                            <h2>{{ character["name"]["full"] }}</h2>
+
+                            {% if result["library_series"] %}
+
+                                {% for series in result["library_series"] %}
+                                    <span class="character-series">{{ series["title"] }}</span>
+                                {% endfor %}
+
+                            {% else %}
+
+                                <span class="character-series">No matching series in your library</span>
+
+                            {% endif %}
+
+                            {% if result["library_series"] %}
+
+                                <button
+                                    class="secondary-button add-character-button"
+                                    type="button"
+                                    data-character-id="{{ character['id'] }}"
+                                    {% if result["is_favorite"] %}disabled{% endif %}
+                                >
+                                    {% if result["is_favorite"] %}
+                                        <i class="icon icon-check"></i>
+                                        Added to Favorites
+                                    {% else %}
+                                        <i class="icon icon-plus"></i>
+                                        Add Character
+                                    {% endif %}
+                                </button>
+
+                            {% endif %}
+                        </div>
+
+                    </article>
+
+            {% endfor %}
+
+        </section>
+
+    </main>
+
+{% endblock %}
+
+
+
+
+{% block scripts %}
+
+    <script src="{{ url_for('static', filename='js/character-search.js') }}"></script>
+
+{% endblock %}

@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+    {{media.title.english or media.title.romaji }} | Anime Journal
+    
+{% endblock %}
+
+{% block styles %}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/media-info.css') }}">
+
+{% endblock %}
+
+
+
+
+{% block content %}
+
+        <main 
+            class="media-page" 
+            id="media-page" 
+            data-media-type="{{ media_type }}" 
+            data-anilist-id="{{ media.id }}"
+            data-total-progress="{% if media_type == 'anime' %}{{ media.episodes if media.episodes is not none else '' }}{% else %}{{ media.chapters if media.chapters is not none else '' }}{% endif %}" 
+            data-has-entry="{{ 'true' if has_user_entry else 'false' }}">
+
+            <section 
+                class="media-hero" 
+                {% if media.bannerImage %}
+                    style="background-image: url('{{ media.bannerImage }}');"
+                {% endif %}>
+
+                <div class="media-hero-overlay"></div>
+
+                <div class="media-hero-content">
+                    <span class="media-type">{{ media_type|capitalize }}</span>
+
+                    <h1>{{ media.title.english or media.title.romaji }}</h1>
+                    {% if media.title.english and media.title.romaji %}
+                        <p class="media-subtitle">{{ media.title.romaji }}</p>
+                    {% endif %}
+                </div>
+
+            </section>
+
+
+            <section class="media-details">
+
+                <div class="media-poster-column">
+                    <img class="media-poster" src="{{ media.coverImage.extraLarge }}" alt="Cover for {{ media.title.english or media.title.romaji }}">
+
+                    <div class="poster-metadata">
+
+                        <div class="poster-metadata-item">
+                            <span>Format</span>
+                            <strong>{{ media.format }}</strong>
+                        </div>
+
+                        {% if media_type == "anime" %}
+
+                            {% if media.episodes %}
+                                <div class="poster-metadata-item">
+                                    <span>Episodes</span>
+                                    <strong>{{ media.episodes }}</strong>
+                                </div>
+                            {% endif %}
+
+                        {% endif %}
+
+                        {% if media_type == "manga" %}
+
+                            {% if media.volumes %}
+                                <div class="poster-metadata-item">
+                                    <span>Volumes</span>
+                                    <strong>{{ media.volumes }}</strong>
+                                </div>
+                            {% endif %}
+
+                            {% if media.chapters %}
+                                <div class="poster-metadata-item">
+                                    <span>Chapters</span>
+                                    <strong>{{ media.chapters }}</strong>
+                                </div>
+                            {% endif %}
+
+                        {% endif %}
+
+                    </div>
+                </div>
+
+                <div class="media-info-column">
+
+                    <section class="user-entry-section">
+                        <div class="section-heading">
+                            <h2 id="entry-heading">On Your List</h2>
+
+                            <button class="secondary-button" id="edit-entry-button">Edit Entry</button>
+                        </div>
+
+                        <div class="user-entry-stats">
+
+                            <div class="entry-stat">
+                                <span class="stat-label">Score</span>
+                                <span class="stat-value" id="display-score" data-score="{{ user_entry['score'] if user_entry and user_entry['score'] is not none else '' }}">
+                                    {% if user_entry %}
+                                        {% if user_entry["score"] is not none %}
+                                            {{ "%.1f"|format(user_entry["score"]) }}
+                                        {% else %}
+                                            Unrated
+                                        {% endif %}
+                                    {% endif %}
+                                </span>
+                            </div>
+
+                            <div class="entry-stat">
+                                <span class="stat-label">Status</span>
+                                <span class="stat-value" id="display-status" data-status="{{ user_entry['status'] if user_entry else '' }}"></span>
+                            </div>
+
+                            <div class="entry-stat">
+                                <span class="stat-label">Progress</span>
+                                <span class="stat-value" id="display-progress" data-progress="{{ user_entry['progress'] if user_entry else 0 }}"></span>
+                            </div>
+
+                        </div>
+
+                        <div class="entry-empty-state" id="entry-empty-state">
+                            <p>This series is not in your library yet.</p>
+                        </div>
+
+                        <div class="entry-editor" id="entry-editor">
+
+                            <div class="entry-form-field">
+                                <label for="entry-status">Status</label>
+
+                                <select id="entry-status"></select>
+                            </div>
+
+                            <div class="entry-form-field">
+                                <label for="entry-score">Score</label>
+
+                                <select id="entry-score">
+                                    <option value="">Unrated</option>
+                                </select>
+                            </div>
+
+                            <div class="entry-form-field">
+                                <label for="entry-progress" id="progress-label"></label>
+
+                                <input type="number" id="entry-progress" min="0">
+                            </div>
+
+                            <div class="entry-editor-actions">
+                                <button class="secondary-button" id="cancel-entry-button">Cancel</button>
+                                <button class="secondary-button" id="save-entry-button">Save Changes</button>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    <section class="media-section synopsis-section">
+                        <h2>Synopsis</h2>
+
+                        {% if media.description %}
+                            <p class="media-synopsis">
+                                {{ media.description|safe }}
+                            </p>
+                        {% else %}
+                            <p class="media-synopsis">
+                                No description available.
+                            </p>
+                        {% endif %}
+                    </section>
+
+                    <section class="media-section details-section">
+                        <h2>Details</h2>
+
+                        <div class="media-metadata">
+
+                            <div class="metadata-item">
+                                <span class="metadata-label">Type</span>
+                                <span class="metadata-value">{{ media_type }}</span>
+                            </div>
+
+                            <div class="metadata-item">
+                                <span class="metadata-label">Released</span>
+                                <span class="metadata-value">
+                                    {% if media.startDate.year %}
+                                        {{ media.startDate.year }}
+                                    {% endif %}
+                                </span>
+                            </div>
+
+                            <div class="metadata-item">
+                                <span class="metadata-label">Genres</span>
+                                    {% for genre in media.genres %}
+                                        <span class="metadata-value">{{ genre }}</span>
+                                    {% endfor %}
+                            </div>
+
+                            {% if media_type == "anime" and media.studios.nodes %}
+                                <div class="metadata-item">
+                                    <span class="metadata-label">Studio</span>
+                                    <span class="metadata-value">
+                                        {% for studio in media.studios.nodes %}
+                                            {{ studio.name }}{% if not loop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </div>
+
+                            {% elif media_type == "manga" and creators %}
+                                <div class="metadata-item">
+                                    <span class="metadata-label">
+                                        {% if creators|length == 1 %}
+                                            Creator
+                                        {% else %}
+                                            Creators
+                                        {% endif %}
+                                    </span>
+                                    <span class="metadata-value">
+                                        {% for creator in creators %}
+                                            {{ creator }}{% if not loop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </div>
+                            {% endif %}
+
+                        </div>
+                    </section>
+
+                    <section class="media-section notes-section" id="notes-section">
+                        <div class="section-heading">
+                            <div>
+                                <h2>Your Notes</h2>
+                                <p class="section-description">Your personal thought about this series.</p>
+                            </div>
+
+                            <button class="secondary-button" id="edit-notes-button">Edit Notes</button>
+                        </div>
+
+                        <div class="notes-content" id="notes-content">{% if user_entry and user_entry["notes"] %}{{ user_entry["notes"] }}{% endif %}</div>
+
+                        <div class="notes-editor" id="notes-editor">
+
+                            <textarea id="notes-input" placeholder="Share your thoughts...">{% if user_entry and user_entry["notes"] %}{{ user_entry["notes"] }}{% endif %}</textarea>
+
+                            <div class="notes-editor-actions">
+                                <button class="secondary-button" id="cancel-notes-button">Cancel</button>
+                                <button class="secondary-button" id="save-notes-button">Save Notes</button>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    <div class="remove-entry-actions">
+                        <button class="danger-button" id="remove-entry-button">Remove Entry</button>
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+{% endblock %}
+
+
+
+
+{% block scripts %}
+
+    <script src="{{ url_for('static', filename='js/media-info.js') }}"></script>
+
+{% endblock %}

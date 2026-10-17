@@ -1,0 +1,477 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+    Statistics
+
+{% endblock %}
+
+{% block styles %}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/stats.css') }}">
+
+{% endblock %}
+
+
+
+{% block content %}
+
+    <main class="stats-page">
+
+        <div class="stats-header">
+            <div class="stats-header-info">
+                <h1>My Stats</h1>
+                <p>A personal overview of your anime and manga journey.</p> 
+            </div>
+
+            <div class="stats-dashboard-toolbar">
+                <button
+                    type="button"
+                    id="customize-dashboard-button"
+                    class="stats-customize-button"
+                    aria-expanded="false"
+                    aria-controls="dashboard-customization-panel"
+                >
+                    Customize Dashboard
+                </button>
+            </div>
+        </div>
+
+        
+
+        <div id="dashboard-customization-panel" class="stats-customization-panel" hidden>
+            <div class="stats-customization-header">
+                <h3>Visible Cards</h3>
+                <p>Choose which cards appear on your dashboard.</p>
+            </div>
+
+            <div class="stats-customization-options">
+                <label><input type="checkbox" value="profile" checked>My Profile</label>
+
+                <label><input type="checkbox" value="anime-status" checked>Anime Status</label>
+
+                <label><input type="checkbox" value="manga-status" checked>Manga Status</label>
+
+                <label><input type="checkbox" value="score-distribution" checked>Score Distribution</label>
+
+                <label><input type="checkbox" value="popular-genres" checked>Popular Genres</label>
+
+                <label><input type="checkbox" value="yearly-rating" checked>Highest Rated by Release Year</label>
+
+                <label><input type="checkbox" value="total-progress" checked>Total Progress</label>
+
+                <label><input type="checkbox" value="top-rated" checked>Top 10 Highest Rated</label>
+
+                <label><input type="checkbox" value="release-decades" checked>Release Decade Breakdown</label>
+
+                <label><input type="checkbox" value="average-scores" checked>Average Scores</label>
+            </div>
+        </div>
+
+        <div class="stats-dashboard">
+
+            <div class="stats-card stats-profile-card stats-card-wide" data-card-id="profile">
+                <button type="button" class="stats-drag-handle" aria-label="Drag to rearrange card" title="Drag to rearrange">⋮⋮</button>
+
+                <div class="stats-profile-layout">
+                    <div class="stats-profile-topbar">
+                        <h2>My Profile</h2>
+
+                        <div class="stats-favorites-header">
+                            <h2>My Favorites</h2>
+
+                            <button type="button" id="edit-favorites-button" class="stats-edit-favorites-button" aria-haspopup="dialog" aria-controls="favorites-modal">Edit Favorites</button>
+                        </div>
+                    </div>
+                
+
+                    <div class="stats-profile-content">
+                        <div class="stats-profile-details">
+                            <div class="stats-profile-header">
+                                <form action="{{ url_for('upload_profile_picture') }}" method="POST" enctype="multipart/form-data" class="stats-profile-upload">
+                                    <label for="profile-picture-input" class="stats-profile-avatar" title="Change profile picture">
+                                        {% if profile.profile_image %}
+                                            <img src="{{ profile.profile_image }}" alt="Profile picture">
+                                        {% else %}
+                                            <span>{{ profile.name[0] | upper }}</span>
+                                        {% endif %}
+
+                                        <span class="stats-avatar-overlay">
+                                            <span class="stats-avatar-camera">📷</span>
+                                        </span>
+                                    </label>
+
+                                    <input
+                                        type="file"
+                                        id="profile-picture-input"
+                                        name="profile_picture"
+                                        accept="image/png, image/jpeg, image/webp"
+                                        class="stats-profile-file-input"
+                                        aria-label="Choose profile picture"
+                                        required
+                                    >
+                                </form>
+
+                                <div class="stats-profile-info">
+                                    <h3>{{ profile.name }}</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stats-profile-favorites">
+                            <div class="stats-favorites-grid">
+                                <div class="stats-favorite-item">
+                                 <h4>Favorite Anime</h4>
+
+                                    {% if favorite_anime %}
+                                        <img src="{{ favorite_anime.cover_image }}" alt="{{ favorite_anime.title }} cover" loading="lazy">
+                                        <p>{{ favorite_anime.title }}</p>
+                                    {% else %}
+                                        <p class="stats-favorite-empty">Not selected</p>
+                                    {% endif %}
+                                </div>
+
+                                <div class="stats-favorite-item">
+                                    <h4>Favorite Manga</h4>
+
+                                    {% if favorite_manga %}
+                                        <img src="{{ favorite_manga.cover_image }}" alt="{{ favorite_manga.title }} cover" loading="lazy">
+                                        <p>{{ favorite_manga.title }}</p>
+                                    {% else %}
+                                        <p class="stats-favorite-empty">Not selected</p>
+                                    {% endif %}
+                                </div>
+
+                                <div class="stats-favorite-item">
+                                    <h4>Favorite Character</h4>
+
+                                    {% if favorite_character %}
+                                        <img src="{{ favorite_character.display_image }}" alt="{{ favorite_character.display_name }}" loading="lazy">
+                                        <p>{{ favorite_character.display_name }}</p>
+                                    {% else %}
+                                        <p class="stats-favorite-empty">Not selected</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="stats-card" data-card-id="anime-status">
+                <button
+                    type="button"
+                    class="stats-drag-handle"
+                    aria-label="Drag to rearrange card"
+                    title="Drag to rearrange"
+                >
+                    ⋮⋮
+                </button>
+                <h2>Anime by Status</h2>
+                
+                {% if anime_status_counts %}
+                    <div class="stats-chart-container">
+                        <canvas id="anime-status-chart"></canvas>
+                    </div>
+                {% else %}
+                    <p>Add anime to your library to see your statistics.</p>
+                {% endif %}
+            </div>
+
+            <div class="stats-card" data-card-id="manga-status">
+                <button
+                    type="button"
+                    class="stats-drag-handle"
+                    aria-label="Drag to rearrange card"
+                    title="Drag to rearrange"
+                >
+                    ⋮⋮
+                </button>
+                <h2>Manga by Status</h2>
+                
+                {% if manga_status_counts %}
+                    <div class="stats-chart-container">
+                        <canvas id="manga-status-chart"></canvas>
+                    </div>
+                {% else %}
+                    <p>Add manga to your library to see your statistics.</p>
+                {% endif %}
+            </div>
+
+            <div class="stats-card" data-card-id="score-distribution">
+                <button
+                    type="button"
+                    class="stats-drag-handle"
+                    aria-label="Drag to rearrange card"
+                    title="Drag to rearrange"
+                >
+                    ⋮⋮
+                </button>
+                <div class="stats-card-header">
+                    <h2>Score Distribution</h2>
+
+                    <div class="stats-toggle" id="score-toggle">
+                        <button class="stats-toggle-button active" type="button" data-media="anime">Anime</button>
+                        <button class="stats-toggle-button" type="button" data-media="manga">Manga</button>
+                    </div>
+                </div>
+
+                <div class="stats-chart-container">
+                    <canvas id="score-distribution-chart"></canvas>
+                </div>
+
+                <p id="score-distribution-empty" class="stats-empty" hidden>
+                    Rate some anime and manga to see your score distribution.
+                </p>
+            </div>
+
+            <div class="stats-card" data-card-id="popular-genres">
+                <button
+                    type="button"
+                    class="stats-drag-handle"
+                    aria-label="Drag to rearrange card"
+                    title="Drag to rearrange"
+                >
+                    ⋮⋮
+                </button>
+                <div class="stats-card-header">
+                    <h2>Most Popular Genres</h2>
+
+                    <div class="stats-toggle" id="genre-toggle">
+                        <button class="stats-toggle-button active" type="button" data-media="anime">Anime</button>
+                        <button class="stats-toggle-button" type="button" data-media="manga">Manga</button>
+                    </div>
+                </div>
+
+                <div class="stats-chart-container">
+                    <canvas id="popular-genres-chart"></canvas>
+                </div>
+
+                <p id="popular-genres-empty" class="stats-empty" hidden>
+                    Add anime and manga to your library to see your most popular genres.
+                </p>
+            </div>
+
+            <div class="stats-card" data-card-id="yearly-rating">
+                <button
+                    type="button"
+                    class="stats-drag-handle"
+                    aria-label="Drag to rearrange card"
+                    title="Drag to rearrange"
+                >
+                    ⋮⋮
+                </button>
+                <div class="stats-card-header">
+                    <h2>Highest Rated by Release Year</h2>
+
+                    <div class="stats-toggle" id="yearly-rating-toggle">
+                        <button type="button" class="stats-toggle-button active" data-media="anime">Anime</button>
+                        <button type="button" class="stats-toggle-button" data-media="manga">Manga</button>
+                    </div>
+                </div>
+
+                <div class="stats-chart-container">
+                    <canvas id="yearly-rating-chart"></canvas>
+                </div>
+
+                <p id="yearly-rating-empty" class="stats-empty" hidden>
+                    Rate some anime and manga to see your highest scores by release year.
+                </p>
+            </div>
+
+            <div class="stats-card" data-card-id="total-progress">
+                <button
+                    type="button"
+                    class="stats-drag-handle"
+                    aria-label="Drag to rearrange card"
+                    title="Drag to rearrange"
+                >
+                    ⋮⋮
+                </button>
+                <h2>Total Progress</h2>
+
+                <div class="stats-progress-grid">
+                    <div class="stats-progress-item">
+                        <span class="stats-progress-value">{{ "{:,}".format(total_progress.anime) }}</span>
+                        <span class="stats-progress-label">Episodes Watched</span>
+                    </div>
+
+                    <div class="stats-progress-item">
+                        <span class="stats-progress-value">{{ "{:,}".format(total_progress.manga) }}</span>
+                        <span class="stats-progress-label">Chapters Read</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-card stats-card-wide" data-card-id="top-rated">
+                <button
+                    type="button"
+                    class="stats-drag-handle"
+                    aria-label="Drag to rearrange card"
+                    title="Drag to rearrange"
+                >
+                    ⋮⋮
+                </button>
+                <div class="stats-card-header">
+                    <h2>Your Top 10 Highest Rated</h2>
+
+                    <div class="stats-toggle" id="top-rated-toggle">
+                        <button type="button" class="stats-toggle-button active" data-media="anime">Anime</button>
+                        <button type="button" class="stats-toggle-button" data-media="manga">Manga</button>
+                    </div>
+                </div>
+
+                {% for media_type, entries in top_rated.items() %}
+                    <div class="stats-top-rated-list" data-media="{{ media_type }}" {% if media_type != 'anime' %}hidden{% endif %}>
+                        {% if entries %}
+                            {% for entry in entries %}
+                                <div class="stats-top-rated-item">
+                                    <span class="stats-top-rated-rank">{{ loop.index }}</span>
+                                    <img class="stats-top-rated-cover" src="{{ entry.cover_image }}" alt="{{ entry.title }} cover" loading="lazy">
+                                    <a class="stats-top-rated-title" href="{{ url_for('media', media_type=media_type, anilist_id=entry.anilist_id) }}">{{ entry.title }}</a>
+                                    <span class="stats-top-rated-score">{{ entry.score }}</span>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="stats-empty">
+                                You haven't rated any {{ media_type }} yet.
+                            </p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="stats-card" data-card-id="release-decades">
+                <button
+                    type="button"
+                    class="stats-drag-handle"
+                    aria-label="Drag to rearrange card"
+                    title="Drag to rearrange"
+                >
+                    ⋮⋮
+                </button>
+                <div class="stats-card-header">
+                    <h2>Release Decade Breakdown</h2>
+
+                    <div class="stats-toggle" id="decade-toggle">
+                        <button type="button" class="stats-toggle-button active" data-media="anime">Anime</button>
+                        <button type="button" class="stats-toggle-button" data-media="manga">Manga</button>
+                    </div>
+                </div>
+
+                <div class="stats-chart-container">
+                    <canvas id="decade-chart"></canvas>
+                </div>
+
+                <p id="decade-empty" class="stats-empty" hidden>
+                    Add some anime and manga to see your release decade breakdown.
+                </p>
+            </div>
+
+            <div class="stats-card" data-card-id="average-scores">
+                <button
+                    type="button"
+                    class="stats-drag-handle"
+                    aria-label="Drag to rearrange card"
+                    title="Drag to rearrange"
+                >
+                    ⋮⋮
+                </button>
+                <h2>Average Scores</h2>
+
+                <div class="stats-progress-grid">
+                    <div class="stats-progress-item">
+                        <span class="stats-progress-value">
+                            {% if average_scores.anime is not none %}
+                                {{ "%.2f"|format(average_scores.anime) }}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </span>
+
+                        <span class="stats-progress-label">Average Anime Score</span>
+                    </div>
+
+                    <div class="stats-progress-item">
+                        <span class="stats-progress-value">
+                            {% if average_scores.manga is not none %}
+                                {{ "%.2f"|format(average_scores.manga) }}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </span>
+
+                        <span class="stats-progress-label">Average Manga Score</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="stats-modal" id="favorites-modal" role="dialog" aria-modal="true" aria-labelledby="favorites-modal-title" hidden>
+            <div class="stats-modal-content">
+                <div class="stats-modal-header">
+                    <h2 id="favorites-modal-title">Edit Favorites</h2>
+                </div>
+
+                <form action="{{ url_for('update_profile_favorites') }}" method="POST" class="stats-favorites-form" id="stats-favorites-form">
+                    <label for="favorite-anime">Favorite Anime</label>
+                    <select id="favorite-anime" name="favorite_anime_id">
+                        <option value="">None selected</option>
+
+                        {% for anime in favorite_options.anime %}
+                            <option value="{{ anime.id }}" {% if profile.favorite_anime_id == anime.id %} selected {% endif %}>{{ anime.title }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <label for="favorite-manga">Favorite Manga</label>
+                    <select id="favorite-manga" name="favorite_manga_id">
+                        <option value="">None selected</option>
+
+                        {% for manga in favorite_options.manga %}
+                            <option value="{{ manga.id }}" {% if profile.favorite_manga_id == manga.id %} selected {% endif %}>{{ manga.title }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <label for="favorite-character">Favorite Character</label>
+                    <select id="favorite-character" name="favorite_character_id">
+                        <option value="">None selected</option>
+
+                        {% for character in favorite_character_options %}
+                            <option value="{{ character.id }}" {% if profile.favorite_character_id == character.id %} selected {% endif %}>{{ character.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <div class="stats-favorites-actions">
+                        <button type="button" id="cancel-favorites-button" class="stats-favorites-cancel">Cancel</button>
+                        <button type="submit" class="stats-favorites-save">Save Favorites</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        const animeStatusCounts = {{ anime_status_counts | tojson }};
+        const mangaStatusCounts = {{ manga_status_counts | tojson }};
+        const scoreDistribution = {{ score_distribution | tojson }};
+        const popularGenres = {{ popular_genres | tojson }};
+        const highestRatedByYear = {{ highest_rated_by_year | tojson }};
+        const releaseDecades = {{ release_decades | tojson }};
+    </script>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
+    <script id="stats-card-order-data" type="application/json">{{ card_order | tojson }}</script>
+    <script id="stats-hidden-cards-data" type="application/json">{{ hidden_cards | tojson }}</script>
+    <script src="{{ url_for('static', filename='js/stats.js') }}"></script>
+
+{% endblock %}

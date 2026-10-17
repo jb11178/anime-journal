@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+    Characters
+    
+{% endblock %}
+
+{% block styles %}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/characters.css') }}">
+
+{% endblock %}
+
+
+
+
+{% block content %}
+
+    <main class="characters-page">
+
+        <header class="characters-page-header">
+
+            <div class="characters-header-text">
+                <h1>
+                    <i class="icon icon-heart"></i>
+                    Favorite Characters
+                </h1>
+
+                <p>
+                    Your personal collection of unforgettable characters.
+                </p>
+            </div>
+
+            <div class="character-layout-selector">
+                <span class="layout-selector-label">Display Layout</span>
+
+                <div class="character-layout-options">
+                    <button type="button"
+                            class="character-layout-button active"
+                            data-layout="gallery">
+                        <i class="icon icon-grid-2x2"></i>
+                        Gallery
+                    </button>
+
+                    <button type="button"
+                            class="character-layout-button"
+                            data-layout="podium">
+                        <i class="icon icon-trophy"></i>
+                        Podium
+                    </button>
+
+                    <button type="button"
+                            class="character-layout-button"
+                            data-layout="orbit">
+                        <i class="icon icon-orbit"></i>
+                        Orbit
+                    </button>
+                </div>
+            </div>
+
+            <a
+                href="{{ url_for('character_search') }}"
+                class="primary-button add-character-link"
+            >
+                <i class="icon icon-plus"></i>
+                Add Character
+            </a>
+
+        </header>
+
+        <section class="characters-podium" hidden>
+            <div class="podium-top-three">
+                <!-- Top three characters will be inserted here -->
+            </div>
+
+            <div class="podium-remaining">
+                <!-- Remaining characters will be inserted here -->
+            </div>
+        </section>
+
+        <section class="characters-library" id="characters-library">
+            {% for result in character_results %}
+                {% set character = result["character"] %}
+
+                    <article class="character-card" data-character-id="{{ character['id'] }}" data-position="{{ character['position'] }}">
+
+                        <div class="character-card-visual">
+
+                            <img class="character-image" src="{{ character['custom_image'] or character['image'] }}" alt="{{ character['custom_name'] or character['name'] }}">
+
+                            <div class="character-info">
+                                <div class="character-rank-badge">
+                                    {% if character["position"] == 1 %}
+                                        <i class="icon icon-crown"></i>
+                                    {% elif character["position"] == 2 or character["position"] == 3 %}
+                                        <i class="icon icon-medal"></i>
+                                    {% endif %}
+
+                                    <span class="character-position">
+                                        #{{ character["position"] }}
+                                    </span>
+                                </div>
+
+                                <a class="character-name" href="#">{{ character["custom_name"] or character["name"] }}</a>
+
+                                <div class="character-extra-info">
+                                    <div class="character-series-list">
+
+                                        {% for series in result["series"] %}
+
+                                            <a 
+                                                class="character-series-link" 
+                                                href="{{ url_for(
+                                                    'media', 
+                                                    media_type=series['media_type'], 
+                                                    anilist_id=series['anilist_id']
+                                                ) }}"
+                                            >
+                                                {{ series["title"] }}
+                                            </a>
+
+                                        {% endfor %}
+
+                                    </div>
+
+                                    <button
+                                    class="secondary-button edit-character-button"
+                                    type="button"
+                                    data-character-id="{{ character['id'] }}"
+                                    data-original-name="{{ character['name'] }}"
+                                    data-custom-name="{{ character['custom_name'] }}"
+                                    data-position="{{ character['position'] }}"
+                                    >
+                                        Edit Character
+                                    </button>
+                                </div>
+                                
+
+
+                            </div>
+
+                        </div>
+
+                            
+                        <div class="character-editor" hidden>
+                            <div class="character-editor-header">
+                                <i class="icon icin-sliders-horizontal"></i>
+
+                                <div>
+                                    <h3>Customize Character</h3>
+                                    <p>Make this character your own</p>
+                                </div>
+                            </div>
+
+                            <div class="character-editor-field">
+                                <label>Custom Display Name</label>
+
+                                <input
+                                     class="character-name-input"
+                                    type="text"
+                                    maxlength="100"
+                                    placeholder="Enter a custom name..."
+                                >
+                            </div>
+                                
+                            <div class="character-editor-field">
+                                <label for="rank-{{ character['id'] }}">Favorite Rank</label>
+
+                                <select
+                                    class="character-rank-input"
+                                    id="rank-{{ character['id'] }}"
+                                >
+                                    {% for rank in range(1, character_results|length + 1) %}
+                                        <option
+                                            value="{{ rank }}"
+                                            {% if rank == character["position"] %}selected{% endif %}
+                                        >
+                                            #{{ rank }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                                
+
+                            <div class="character-image-editor">
+                                <label>Custom Portrait</label>
+
+                                <img
+                                    class="character-image-preview"
+                                    src="{{ character['custom_image'] or character['image'] }}"
+                                    alt="portrait-preview"
+                                >
+
+                                <input
+                                    class="character-image-input"
+                                    type="file"
+                                    accept="image/png,image/jpeg/image/webp"
+                                >
+
+                                <button  type="button" class="secondary-button restore-character-image-button">Restore Default Portrait</button>
+                            </div>
+                            <div class="character-editor-actions">
+                                <button class="primary-button save-character-button" type="button">
+                                    <i class="icon icon-check"></i>
+                                    Save Changes
+                                </button>
+
+                                <button class="secondary-button cancel-character-button" type="button">Cancel</button>
+                            </div>
+
+                            <div class="character-remove-section">
+                                <button 
+                                    class="remove-character-button"
+                                    type="button"
+                                    data-character-id="{{ character['id'] }}"
+                                >
+                                    <i class="icon icon-trash-2"></i>
+                                    Remove from Favorites
+                                </button>
+                            </div>
+                        </div>
+
+
+                    </article>
+
+            {% endfor %}
+
+        </section>
+
+        <section class="characters-orbit" hidden>
+
+            <div class="orbit-container">
+
+
+                <button class="orbit-nav orbit-prev" type="button" aria-label="Previous character">
+                    <i class="icon icon-chevron-left"></i>
+                </button>
+
+                <div class="orbit-stage"></div>
+
+                <button class="orbit-nav orbit-next" type="button" aria-label="Next character">
+                    <i class="icon icon-chevron-right"></i>
+                </button>
+
+            </div>
+
+            <div class="orbit-character-details">
+                <div class="orbit-character-rank"></div>
+                <div class="orbit-character-name"></div>
+                <div class="orbit-character-series"></div>
+            </div>
+            
+        </section>
+
+        <dialog class="remove-character-modal">
+            <div class="remove-modal-content">
+
+                <div class="remove-modal-header">
+                    <i class="icon icon-triangle-alert"></i>
+
+                    <h2>Remove Character?</h2>
+                </div>
+
+                <div class="remove-modal-character">
+                    <img class="remove-modal-image" src="" alt="">
+
+                    <div>
+                        <h3 class="remove-modal-name"></h3>
+                        <p>Remove from your favorites?</p>
+                    </div>
+                </div>
+
+                <p class="remove-modal-warning">
+                    Your custom name, portrait, and ranking for this
+                    character will be removed. You can add the character
+                    again later.
+                </p>
+
+                <div class="remove-modal-actions">
+                    <button
+                        type="button"
+                        class="secondary-button cancel-remove-button"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="button"
+                        class="confirm-remove-button"
+                    >
+                        <i class="icon icon-trash-2"></i>
+                        Remove from Favorites
+                    </button>
+                </div>
+
+            </div>
+        </dialog>
+
+    </main>
+
+{% endblock %}
+
+
+
+
+{% block scripts %}
+
+    <script src="{{ url_for('static', filename='js/characters.js') }}"></script>
+
+{% endblock %}

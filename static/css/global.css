@@ -1,0 +1,76 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-color: var(--background);
+    color: var(--text-primary);
+    font-family: Arial, sans-serif;
+}
+
+/* Library status badges */
+
+.status {
+    display: inline-block;
+
+    padding: 6px 10px;
+
+    border-radius: 6px;
+
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.status.completed {
+    background-color: rgba(101, 193, 140, 0.12);
+    color: #65c18c;
+}
+
+.status.watching,
+.status.reading {
+    background-color: rgba(139, 124, 246, 0.12);
+    color: #a99dff;
+}
+
+.status.on-hold {
+    background-color: rgba(232, 184, 109, 0.12);
+    color: #e8b86d;
+}
+
+.status.dropped {
+    background-color: rgba(229, 115, 115, 0.12);
+    color: #e57373;
+}
+
+.status.plan-to-watch,
+.status.plan-to-read {
+    background-color: rgba(120, 185, 232, 0.12);
+    color: #78b9e8;
+}
+
+/* Global scrollbar styling */
+
+/* Firefox */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--background);
+}
+
+/* Fallback for browsers without standard scrollbar styling */
+@supports not (scrollbar-color: auto) {
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--background);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--scrollbar-thumb);
+        border: 2px solid var(--background);
+        border-radius: 10px;
+    }
+}

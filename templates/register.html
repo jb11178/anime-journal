@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+    Create Account
+
+{% endblock %}
+
+{% block styles %}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+
+{% endblock %}
+
+
+
+
+{% block content %}
+
+<main class="auth-page">
+    <div class="auth-container">
+        <h1>Create an Account</h1>
+        <p>Start cataloging your favorite anime and manga.</p>
+
+        <form action="{{ url_for('register') }}" method="POST">
+
+            <div class="auth-field">
+                <label for="name">Display Name</label>
+                <input 
+                    type="text"
+                    id="name"
+                    name="name"
+                    autocomplete="name"
+                    required
+                >
+            </div>
+
+            <div class="auth-field">
+                <label for="email">Email</label>
+                <input 
+                    type="email"
+                    id="email"
+                    name="email"
+                    autocomplete="email"
+                    required
+                >
+            </div>
+
+            <div class="auth-field">
+                <label for="password">Password</label>
+                <input 
+                    type="password"
+                    id="password"
+                    name="password"
+                    autocomplete="new-password"
+                    minlength="8"
+                    required
+                >
+            </div>
+
+            <button class="primary-button" type="submit">Create Account</button>
+
+        </form>
+
+        <p class="auth-switch">
+            Already have an account?
+            <a href="{{ url_for('login') }}">Login</a>
+        </p>
+    </div>
+</main>
+
+{% endblock %}

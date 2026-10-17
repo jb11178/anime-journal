@@ -1,0 +1,133 @@
+.auth-page {
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 40px 20px;
+}
+
+
+/* Authentication card */
+
+.auth-container {
+    width: 100%;
+    max-width: 420px;
+
+    padding: 40px;
+
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+}
+
+.auth-container h1 {
+    margin: 0;
+
+    color: var(--text-primary);
+
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: -0.8px;
+    text-align: center;
+}
+
+.auth-container > p {
+    margin: 12px 0 32px;
+
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+
+/* Form fields */
+
+.auth-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    margin-bottom: 22px;
+}
+
+.auth-field label {
+    color: var(--text-secondary);
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.auth-field input {
+    width: 100%;
+
+    padding: 13px 14px;
+
+    background-color: var(--background);
+    color: var(--text-primary);
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: 14px;
+
+    outline: none;
+
+    transition: border-color 0.2s ease,
+                box-shadow 0.2s ease;
+}
+
+.auth-field input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px
+        color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+
+/* Submit button */
+
+.auth-container .primary-button {
+    width: 100%;
+
+    margin-top: 8px;
+    padding: 13px;
+}
+
+
+/* Switch between login and registration */
+
+.auth-container .auth-switch {
+    margin: 28px 0 0;
+
+    color: var(--text-secondary);
+    font-size: 13px;
+    text-align: center;
+}
+
+.auth-switch a {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
+
+    transition: color 0.2s ease;
+}
+
+.auth-switch a:hover {
+    color: var(--text-primary);
+}
+
+
+/* Smaller screens */
+
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 30px 24px;
+    }
+
+    .auth-container h1 {
+        font-size: 26px;
+    }
+}

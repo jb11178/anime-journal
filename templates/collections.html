@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+    Collections
+
+{% endblock %}
+
+{% block styles %}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/collections.css') }}">
+
+{% endblock %}
+
+
+
+
+{% block content %}
+
+    <main class="collections-page">
+
+        <header class="collections-page-header">
+            <div class="collections-page-header-text">
+                <h1>
+                    <i class="icon icon-library"></i>
+                    Collections
+                </h1>
+
+                <p>Curate your own collections of anime and manga.</p>
+            </div>
+        </header>
+
+        <section class="collections-grid">
+
+            {% if not collections %}
+
+                <button class="collection-create-card collection-empty-state" type="button">
+                    <span class="collection-create-icon">
+                        <i class="icon icon-plus"></i>
+                    </span>
+
+                    <span class="collection-create-title">
+                        Create Your First Collection
+                    </span>
+
+                    <span class="collection-create-description">
+                        Organize your favorite series into personalized collections.
+                    </span>
+                </button>
+
+            {% else %}
+
+                {% for collection in collections %}
+                    <article class="collection-card" data-collection-id="{{ collection['id'] }}">
+
+                        <div class="collection-card-art">
+                            {% if collection["custom_image"] %}
+                                <img class="collection-card-cover" src="{{ collection['custom_image'] }}" alt="{{ collection['name'] }} cover">
+                            {% else %}
+                                <i class="icon icon-layers"></i>
+                            {% endif %}
+                        </div>
+
+                        <div class="collection-card-info">
+                            <h2>{{ collection['name'] }}</h2>
+
+                            <div class="collection-card-meta">
+                                <span>{{ collection["media_type"] | title }}</span>
+                                <span>•</span>
+                                <span>
+                                    {{ collection["entry_count"] }}
+                                    {{ 'entry' if collection["entry_count"] == 1 else 'entries' }}
+                                </span>
+                            </div>
+                        </div>
+
+                    </article>
+                {% endfor %}
+
+                <button class="collection-create-card" type="button">
+                    <i class="icon icon-plus"></i>
+                    <span>New Collection</span>
+                </button>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+    <dialog class="collection-editor-modal">
+
+        <div class="collection-editor">
+
+            <header class="collection-editor-header">
+                <div>
+                    <h2>Create Collection</h2>
+                    <p>Build a personalized collection from your library</p>
+                </div>
+            </header>
+
+            <div class="collection-editor-body">
+
+                <div class="collection-editor-field">
+                    <label for="collection-name">
+                        Collection Name
+                    </label>
+
+                    <input type="text" id="collection-name" placeholder="Name your colletion..." maxlength="100">
+                </div>
+
+                <div class="collection-editor-field">
+                    <label for="collection-cover">Collection Cover (Optional)</label>
+
+                    <div class="collection-cover-picker">
+                        <div class="collection-cover-preview">
+                            <i class="icon icon-image"></i>
+                            <span>No cover selected</span>
+                        </div>
+
+                        <div class="collection-cover-controls">
+                            <input
+                                type="file"
+                                id="collection-cover"
+                                accept="image/png, image/jpeg, image/webp"
+                                hidden
+                            >
+
+                            <label for="collection-cover" class="collection-cover-upload">
+                                <i class="icon icon-upload"></i>
+                                Choose Image
+                            </label>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collection-editor-field">
+                    <label>Collection Type</label>
+
+                    <div class="collection-type-selector">
+
+                        <button class="collection-type-button active" type="button" data-type="ANIME" aria-pressed="true">
+                            <i class="icon icon-tv"></i>
+                            Anime
+                        </button>
+
+                        <button class="collection-type-button" type="button" data-type="MANGA" aria-pressed="false">
+                            <i class="icon icon-book-open"></i>
+                            Manga
+                        </button>
+
+                    </div>
+                </div>
+
+                <section class="collection-library-selection">
+
+                    <div class="collection-library-heading">
+                        <h3>Your Library</h3>
+                        <span class="collection-selected-count">0 Selected</span>
+                    </div>
+
+                    <div class="collection-library-tools">
+
+                        <div class="collection-search-wrapper">
+                            <i class="icon icon-search"></i>
+
+                            <input type="search" id="collection-search" placeholder="Search your library...">
+                        </div>
+
+                        <select id="collection-genre-filter">
+                            <option value="">All Genres</option>
+                        </select>
+
+                        <select id="collection-status-filter">
+                            <option value="">All Statuses</option>
+                        </select>
+
+                    </div>
+
+                    <div class="collection-library-results">
+                        <div class="collection-library-placeholder">
+                            <i class="icon icon-library"></i>
+                        </div>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <footer class="collection-editor-footer">
+
+                <button class="secondary-button collection-editor-cancel" type="button">Cancel</button>
+
+                <button class="primary-button collection-editor-save" type="button">
+                    <i class="icon icon-check"></i>
+                    Save Collection
+                </button>
+
+            </footer>
+
+        </div>
+
+    </dialog>
+
+
+    <dialog class="collection-details-modal">
+        <div class="collection-details">
+
+            <header class="collection-details-header">
+                <div class="collection-details-heading">
+                    <h2 class="collection-details-title">Collection Name</h2>
+                    <p class="collection-details-subtitle">Anime Collection</p>
+                </div>
+
+                <button class="collection-details-close" type="button" aria-label="Close collection details">
+                    <i class="icon icon-x"></i>
+                </button>
+            </header>
+
+            <div class="collection-details-body">
+                <div class="collection-details-grid">
+
+                </div>
+            </div>
+
+            <footer class="collection-details-footer">
+                <button class="secondary-button collection-details-edit" type="button">
+                    <i class="icon icon-pencil"></i>
+                    Edit Collection
+                </button>
+
+                <button class="danger-button collection-details-delete" type="button">
+                    <i class="icon icon-trash-2"></i>
+                    Delete Collection
+                </button>
+            </footer>
+
+        </div>
+    </dialog>
+
+{% endblock %}
+
+
+
+
+{% block scripts %}
+
+    <script id="anime-library-entries" type="application/json">
+        {{ anime_entries | tojson }}
+    </script>
+
+    <script id="manga-library-entries" type="application/json">
+        {{ manga_entries | tojson }}
+    </script>
+
+    <script>
+        const animeLibraryEntries = JSON.parse(
+            document.getElementById('anime-library-entries').textContent
+        );
+        const mangaLibraryEntries = JSON.parse(
+            document.getElementById('manga-library-entries').textContent
+        );
+    </script>
+
+    <script src="{{ url_for('static', filename='js/collections.js') }}"></script>
+
+{% endblock %}

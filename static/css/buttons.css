@@ -1,0 +1,66 @@
+.primary-button,
+.secondary-button,
+.danger-button {
+    height: 40px;
+    padding: 0 16px;
+
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.primary-button {
+    background-color: var(--accent);
+    color: var(--text-on-accent);
+
+    border: 1px solid var(--border);
+
+    text-decoration: none;
+    
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.secondary-button {
+    background-color: var(--surface);
+    color: var(--text-primary);
+
+    border: 1px solid var(--border);
+}
+
+.primary-button:hover,
+.secondary-button:hover {
+    transform: translateY(-1px);
+}
+
+.secondary-button:hover {
+    background-color: var(--surface-hover);
+}
+
+.danger-button {
+    background-color: transparent;
+    color: var(--danger);
+
+    border: 1px solid var(--danger);
+}
+
+.danger-button:hover {
+    background-color: var(--danger);
+    color: var(--text-on-danger);
+
+    transform: translateY(-1px);
+}
+
+.primary-button:focus-visible,
+.secondary-button:focus-visible,
+.danger-button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}

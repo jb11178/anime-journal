@@ -1,0 +1,422 @@
+.media-page {
+    width: 100%;
+}
+
+/*=======================================================================
+    BANNER AND POSTER SECTION
+=======================================================================*/
+
+.media-hero {
+    position: relative;
+    height: 460px;
+    overflow: hidden;
+}
+
+.media-banner {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.media-hero-overlay {
+    position: absolute;
+    inset: 0;
+
+    background: linear-gradient(
+        to top,
+        var(--background) 0%,
+        var(--hero-overlay-medium) 35%,
+        var(--hero-overlay-light) 75%
+    );
+}
+
+.media-hero-content {
+    position: absolute;
+
+    left: max(40px, calc((100% - 1320px) / 2));
+    right: 40px;
+    bottom: 48px;
+
+    z-index: 2;
+}
+
+.media-hero-content h1 {
+    margin: 0;
+
+    font-size: 48px;
+    font-weight: 600;
+    letter-spacing: -1.5px;
+}
+
+.media-type {
+    display: inline-block;
+
+    margin-bottom: 12px;
+
+    color: var(--accent);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.media-subtitle {
+    margin: 8px 0 0;
+
+    color: var(--text-secondary);
+
+    font-size: 18px;
+}
+
+.media-details {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 48px;
+
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 48px 40px;
+}
+
+.media-poster {
+    display: block;
+
+    width: 100%;
+    aspect-ratio: 2 / 3;
+
+    object-fit: cover;
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 24px;
+}
+
+.section-heading h2 {
+    margin: 0;
+
+    font-size: 22px;
+    font-weight: 600;
+}
+
+/*=======================================================================
+    SERIES METADATA SECTION
+=======================================================================*/
+
+.poster-metadata-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+
+    padding: 12px 0;
+
+    border-bottom: 1px solid var(--border);
+
+    font-size: 13px;
+}
+
+.poster-metadata-item span {
+    color: var(--text-secondary);
+}
+
+.poster-metadata-item strong {
+    color: var(--text-primary);
+
+    font-weight: 500;
+    text-align: right;
+}
+
+/*=======================================================================
+    USER ENTRY SECTION
+=======================================================================*/
+
+.user-entry-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    background-color: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.entry-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    padding: 20px 24px;
+}
+
+.entry-stat + .entry-stat {
+    border-left: 1px solid var(--border);
+}
+
+.stat-label {
+    color: var(--text-secondary);
+
+    font-size: 12px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.stat-value {
+    color: var(--text-primary);
+
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.entry-empty-state {
+    display: none;
+
+    padding: 32px 24px;
+
+    background-color: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    text-align: center;
+}
+
+.entry-empty-state p {
+    margin: 0;
+
+    color: var(--text-secondary);
+
+    font-size: 14px;
+}
+
+/*=======================================================================
+    SYNOPSIS SECTION
+=======================================================================*/
+
+.media-section {
+    margin-top: 40px;
+}
+
+.media-section h2 {
+    margin: 0 0 16px;
+
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.media-synopsis {
+    max-width: 900px;
+    margin: 0;
+
+    color: var(--text-secondary);
+
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+/*=======================================================================
+    DETAILS SECTION
+=======================================================================*/
+
+.media-metadata {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+
+    overflow: hidden;
+
+    background-color: var(--border);
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.metadata-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    padding: 18px 20px;
+
+    background-color: var(--surface);
+}
+
+.metadata-label {
+    color: var(--text-secondary);
+
+    font-size: 12px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.metadata-value {
+    color: var(--text-primary);
+
+    font-size: 15px;
+    font-weight: 500;
+}
+
+/*=======================================================================
+    NOTES SECTION
+=======================================================================*/
+
+.section-description {
+    margin: 6px 0 0;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+}
+
+.notes-content {
+    min-height: 160px;
+    padding: 24px;
+
+    background-color: var(--surface);
+    color: var(--text-secondary);
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    font-size: 15px;
+    line-height: 1.8;
+
+    white-space: pre-wrap;
+}
+
+.notes-content.empty {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.notes-editor {
+    display: none;
+}
+
+.notes-editor.open {
+    display: block;
+}
+
+.notes-editor textarea {
+    display: block;
+
+    width: 100%;
+    min-height: 220px;
+    padding: 20px;
+
+    resize: vertical;
+
+    background-color: var(--surface);
+    color: var(--text-primary);
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.7;
+
+    outline: none;
+}
+
+.notes-editor textarea:focus {
+    border-color: var(--accent);
+}
+
+.notes-editor-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+
+    margin-top: 12px;
+}
+
+.remove-entry-actions {
+    display: flex;
+    justify-content: flex-end;
+
+    margin-top: 32px;
+}
+
+/*=======================================================================
+    EDIT/ADD ENTRY SECTION
+=======================================================================*/
+
+.entry-editor {
+    display: none;
+
+    padding: 24px;
+
+    background-color: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.entry-editor.open {
+    display: block;
+}
+
+.entry-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    margin-bottom: 20px;
+}
+
+.entry-form-field label {
+    color: var(--text-secondary);
+
+    font-size: 12px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.entry-form-field select,
+.entry-form-field input {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+
+    background-color: var(--background);
+    color: var(--text-primary);
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: 14px;
+
+    outline: none;
+}
+
+.entry-form-field select:focus,
+.entry-form-field input:focus {
+    border-color: var(--accent);
+}
+
+.entry-editor-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+
+    margin-top: 24px;
+}

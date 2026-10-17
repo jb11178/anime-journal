@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+
+<html lang="en" data-theme="{{ user_theme }}">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        {% if not session.get("user_id") %}
+        <script>
+            (() => {
+                const availableThemes = ["midnight", "sakura", "ocean", "forest", "ember"];
+                const savedTheme = localStorage.getItem("selectedTheme");
+
+                if (availableThemes.includes(savedTheme)) {
+                    document.documentElement.dataset.theme = savedTheme;
+                }
+            })();
+        </script>
+        {% endif %}
+
+        {% if session.get("user_id") %}
+        <script>
+            localStorage.setItem(
+                "selectedTheme",
+                document.documentElement.dataset.theme
+            );
+        </script>
+        {% endif %}
+        
+        <title>{% block title %}Anime Journal{% endblock %}</title>
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/navigation.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
+
+        <link rel="stylesheet" href="https://unpkg.com/lucide-static@0.468.0/font/lucide.css">
+        {% block styles %}{% endblock %}
+    </head>
+
+    <body>
+        {% if request.endpoint not in ('login', 'register') %}
+        
+        <nav class="navigation-bar">
+
+            <div class="site-name">
+                Anime/Manga Journal
+            </div>
+
+            <ul class="navigation-links">
+                <li><a href="{{ url_for('index') }}">Anime</a></li>
+                <li><a href="{{ url_for('manga') }}">Manga</a></li>
+                <li><a href="{{ url_for('collections') }}">Collections</a></li>
+                <li><a href="{{ url_for('characters') }}">Characters</a></li>
+                <li><a href="{{ url_for('stats') }}">Stats</a></li>
+            </ul>
+
+            <div class="search-bar">
+                <form class="nav-search" action="{{ url_for('search') }}" method="GET">
+                    <input type="search" name="q" placeholder="Search..." aria-label="Search anime and manga">
+
+                    <input type="hidden" name="type" value="{{ media_type if media_type else 'anime' }}">
+                </form>
+            </div> 
+
+            <div class="nav-theme-picker">
+                <button
+                    type="button"
+                    class="nav-theme-button"
+                    id="theme-picker-button"
+                    aria-label="Choose theme"
+                    aria-expanded="false"
+                    aria-controls="theme-picker-menu"
+                >
+                    <i class="icon icon-palette" aria-hidden="true"></i>
+                </button>
+
+                <div class="nav-theme-menu" id="theme-picker-menu" hidden>
+                    <h3>Choose Theme</h3>
+
+                    <button type="button" class="nav-theme-option" data-theme="midnight">
+                        <span class="nav-theme-preview midnight-preview">
+                            <span></span><span></span><span></span>
+                        </span>
+                        <span>Midnight</span>
+                    </button>
+
+                    <button type="button" class="nav-theme-option" data-theme="sakura">
+                        <span class="nav-theme-preview sakura-preview">
+                            <span></span><span></span><span></span>
+                        </span>
+                        <span>Sakura</span>
+                    </button>
+
+                    <button type="button" class="nav-theme-option" data-theme="ocean">
+                        <span class="nav-theme-preview ocean-preview">
+                            <span></span><span></span><span></span>
+                        </span>
+                        <span>Ocean</span>
+                    </button>
+
+                    <button type="button" class="nav-theme-option" data-theme="forest">
+                        <span class="nav-theme-preview forest-preview">
+                            <span></span><span></span><span></span>
+                        </span>
+                        <span>Forest</span>
+                    </button>
+
+                    <button type="button" class="nav-theme-option" data-theme="ember">
+                        <span class="nav-theme-preview ember-preview">
+                            <span></span><span></span><span></span>
+                        </span>
+                        <span>Ember</span>
+                    </button>
+                </div>
+            </div>
+
+            <form class="nav-logout-form" action="{{ url_for('logout') }}" method="POST">
+                <button type="submit" class="nav-logout-button">
+                    <i class="icon icon-log-out" aria-hidden="true"></i>
+                    <span>Log Out</span>
+                </button>
+            </form>
+
+        </nav>
+
+        {% endif %}
+
+        {% block content %}{% endblock %}
+
+        {% block scripts %}{% endblock %}
+
+        <script src="{{ url_for('static', filename='js/themes.js') }}"></script>
+
+    </body>
+
+</html>

@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+    Search | Anime Journal
+    
+{% endblock %}
+
+
+{% block styles %}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/search.css') }}">
+
+{% endblock %}
+
+
+
+
+{% block content %}
+
+        <main class="search-page">
+
+            <section class="search-header">
+                <h1>Search</h1>
+                <p>Find anime and manga to add to your library.</p>
+
+                <form class="search-form" action="{{ url_for('search') }}" method="GET">
+                    <div class="search-input-wrapper">
+                        <input type="search" class="search-input" name="q" value="{{ search_term }}" placeholder="Search anime and manga...">
+                        <input type="hidden" name="type" id="search-media-type" value="{{ media_type }}">
+
+                        <button type="submit" class="primary-button search-button">Search</button>
+                    </div>
+
+                    <div class="media-type-toggle">
+                        <button type="button" class="media-type-button {% if media_type == 'anime' %}active{% endif %}" data-media-type="anime">Anime</button>
+
+                        <button type="button" class="media-type-button {% if media_type == 'manga' %}active{% endif %}" data-media-type="manga">Manga</button>
+                    </div>
+                </form>
+            </section>
+
+
+            {% if search_term %}
+                <section class="search-results">
+
+                    <div class="search-results-header">
+                        <h2>Results</h2>
+                        <span>{{ results|length }} results</span>
+                    </div>
+
+                {% if results %}
+
+                    {% for media in results %}
+
+                        <div class="search-result">
+
+                            <img class="search-result-cover" src="{{ media.coverImage.large }}" alt="Cover for {{ media.title.english or media.title.romaji }}">
+
+                            <div class="search-result-info">
+
+                                <div class="search-result-heading">
+                                    <h3>
+                                        <a href="{{ url_for('media', media_type=media_type, anilist_id=media.id) }}">
+                                            {{ media.title.english or media.title.romaji }}
+                                        </a>
+                                    </h3>
+
+                                    <span class="media-type-label">{{ media_type|capitalize }}</span>
+                                </div>
+
+                                <div class="search-result-metadata">
+
+                                    <span>{{ media.format }}</span>
+
+                                    {% if media_type == "anime" %}
+
+                                        {% if media.episodes %}
+                                            <span>{{ media.episodes }} Episodes</span>
+                                        {% endif %}
+
+                                    {% else %}
+
+                                        {% if media.chapters %}
+                                            <span>{{ media.chapters }} Chapters</span>
+                                        {% endif %}
+
+                                    {% endif %}
+
+                                    {% if media.startDate.year %}
+                                        <span>{{ media.startDate.year }}</span>
+                                    {% endif %}
+                                </div>
+
+                                <div class="search-result-genres">
+
+                                    {% for genre in media.genres %}
+                                        <span>{{ genre }}</span>
+                                    {% endfor %}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="search-empty">
+                        <h3>No results found</h3>
+                        <p>Try another title or check whether you're searching for Anime or Manga.</p>
+                    </div>
+
+                {% endif %}
+
+                    
+                </section>
+            {% endif %}
+        </main>
+
+{% endblock %}
+
+
+
+
+{% block scripts %}
+
+    <script src="{{ url_for('static', filename='js/search.js') }}"></script>
+
+{% endblock %}

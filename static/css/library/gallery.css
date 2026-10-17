@@ -1,0 +1,141 @@
+.gallery-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+
+    gap: 20px;
+}
+
+.gallery-layout.density-compact {
+    grid-template-columns:
+        repeat(auto-fill, minmax(170px, 1fr));
+}
+
+.gallery-layout.density-comfortable {
+    grid-template-columns:
+        repeat(auto-fill, minmax(220px, 1fr));
+}
+
+.gallery-layout.density-spacious {
+    grid-template-columns:
+        repeat(auto-fill, minmax(290px, 1fr));
+}
+
+.gallery-layout .list-header {
+    display: none;
+}
+
+.gallery-layout .media-entry {
+    display: grid;
+    grid-template-rows: 1fr auto auto;
+    align-content: end;
+
+    position: relative;
+
+    aspect-ratio: 2 / 3;
+    min-height: 0;
+    padding: 0;
+
+    overflow: hidden;
+}
+
+.gallery-layout .media-cover {
+    width: 100%;
+    height: 100%;
+
+    position: absolute;
+    inset: 0;
+
+    border-radius: 0;
+
+    object-fit: cover;
+
+    transition: transform 0.35s ease;
+}
+
+.gallery-layout .media-entry:hover .media-cover {
+    transform: scale(1.03);
+}
+
+.gallery-layout .media-title {
+    display: block;
+    position: static;
+}
+
+.gallery-layout .media-title-info a {
+    position: relative;
+    display: block;
+
+    z-index: 2;
+
+    margin: 0 20px 20px;
+}
+
+.gallery-layout .media-title-info a {
+    color: var(--gallery-overlay-text);
+}
+
+.gallery-layout .media-title-info a:hover {
+    color: var(--accent);
+}
+
+.gallery-layout .rank-column {
+    display: none;
+}
+
+.gallery-layout .score-column {
+    display: block;
+
+    position: absolute;
+
+    top: 16px;
+    right: 16px;
+
+    z-index: 2;
+}
+
+.gallery-layout .score {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 48px;
+    height: 34px;
+
+    padding: 0 10px;
+
+    background-color: var(--gallery-overlay-background);
+    color: var(--gallery-overlay-text);
+
+    border: 1px solid var(--gallery-overlay-border);
+    border-radius: 8px;
+
+    backdrop-filter: blur(0.5px);
+}
+
+.gallery-layout .status-column {
+    display: block;
+    position: relative;
+
+    grid-row: 2;
+
+    z-index: 2;
+
+    margin: 0 20px 10px;
+}
+
+.gallery-layout .media-entry::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.1) 60%);
+
+    z-index: 1;
+    pointer-events: none;
+}
+
+.gallery-layout .title-column {
+    grid-row: 3;
+    min-width: 0;
+}
