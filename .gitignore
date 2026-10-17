@@ -30,3 +30,6 @@ Thumbs.db
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+
+# Local deployment testing data
+test_data/
