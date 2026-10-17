@@ -1,6 +1,6 @@
 import requests
 import sqlite3
-from flask import Flask, render_template, request, current_app, url_for, jsonify, abort, session, redirect, g, flash
+from flask import Flask, render_template, request, current_app, url_for, jsonify, abort, session, redirect, g, flash, send_from_directory
 import os
 from pathlib import Path
 from uuid import uuid4
@@ -16,7 +16,7 @@ from collections import Counter
 load_dotenv()
 
 # Initialization
-app = Flask(__name__)
+app = Flask(__name__, static_folder=None)
 
 app.secret_key = os.environ["SECRET_KEY"]
 app.config["SESSION_COOKIE_HTTPONLY"] = True
@@ -24,15 +24,36 @@ app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 
 app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
 
-app.config["DATABASE"] = Path(app.root_path).parent / "database.db"
-
-app.config["CHARACTER_UPLOAD_FOLDER"] = (
-    Path(app.static_folder) / "uploads" / "characters"
+# Use persistent storage in production, or the existing local database during development
+data_dir = Path(
+    os.environ.get("DATA_DIR", str(Path(app.root_path).parent))
 )
 
-app.config["COLLECTION_UPLOAD_FOLDER"] = (
-    Path(app.static_folder) / "uploads" / "collections"
-)
+data_dir.mkdir(parents=True, exist_ok=True)
+
+app.config["DATABASE"] = data_dir / "database.db"
+
+# Local uploads remain inside static/.
+# Production uploads use the persistent data directory.
+if os.environ.get("DATA_DIR"):
+    upload_root = data_dir / "uploads"
+else:
+    upload_root = Path(app.root_path) / "static" / "uploads"
+
+app.config["UPLOAD_ROOT"] = upload_root
+app.config["STATIC_ROOT"] = Path(app.root_path) / "static"
+
+app.config["CHARACTER_UPLOAD_FOLDER"] = upload_root / "characters"
+app.config["COLLECTION_UPLOAD_FOLDER"] = upload_root / "collections"
+app.config["PROFILE_UPLOAD_FOLDER"] = upload_root / "profile_picture"
+
+# Create the folders if they don't exist
+for folder in (
+    app.config["CHARACTER_UPLOAD_FOLDER"],
+    app.config["COLLECTION_UPLOAD_FOLDER"],
+    app.config["PROFILE_UPLOAD_FOLDER"],
+):
+    folder.mkdir(parents=True, exist_ok=True)
 
 app.config["CHARACTER_UPLOAD_FOLDER"].mkdir(
     parents=True,
@@ -498,6 +519,17 @@ def inject_user_theme():
         return {"user_theme": "midnight"}
 
     return {"user_theme": user["theme"]}
+
+# ==========SERVE IMAGES FROM PERSISTENT STORAGE=======================================================================================================================================
+
+@app.route("/static/uploads/<path:filename>")
+def serve_uploaded_image(filename):
+    return send_from_directory(app.config["UPLOAD_ROOT"], filename)
+
+
+@app.route("/static/<path:filename>", endpoint="static")
+def serve_static_file(filename):
+    return send_from_directory(app.config["STATIC_ROOT"], filename)
 
 # ==========ACCOUNT REGISTRATION/LOGIN=======================================================================================================================================
 
@@ -2201,8 +2233,7 @@ def upload_profile_picture():
         flash("Please upload a valid JPEG, PNG, or WebP image.")
         return redirect(url_for("stats"))
 
-    upload_folder = Path(app.static_folder) / "uploads" / "profile_picture"
-    upload_folder.mkdir(parents=True, exist_ok=True)
+    upload_folder = app.config["PROFILE_UPLOAD_FOLDER"]
 
     try:
         filename, filepath = save_uploaded_image(
