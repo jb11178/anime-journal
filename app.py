@@ -19,8 +19,10 @@ load_dotenv()
 app = Flask(__name__, static_folder=None)
 
 app.secret_key = os.environ["SECRET_KEY"]
+
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.config["SESSION_COOKIE_SECURE"] = (os.environ.get("APP_ENV") == "production")
 
 app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
 
