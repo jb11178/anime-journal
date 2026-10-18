@@ -103,7 +103,7 @@ for (let button of densityButtons) {
 
         button.classList.add('active');
 
-        mediaLibrary.classList.remove('density-comfortable', 'denisty-compact', 'density-spacious');
+        mediaLibrary.classList.remove('density-comfortable', 'density-compact', 'density-spacious');
 
         const selectedDensity = button.dataset.density;
         mediaLibrary.classList.add('density-' + selectedDensity);

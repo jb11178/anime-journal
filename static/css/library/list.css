@@ -108,3 +108,74 @@
 
     font-size: 13px;
 }
+
+
+
+/* Mobile list layout */
+
+@media (max-width: 768px) {
+
+    .library-header {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+    }
+
+    .library-header h1 {
+        font-size: 26px;
+    }
+
+    .library-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .library-actions .primary-button,
+    .library-actions .secondary-button {
+        flex: 1;
+        text-align: center;
+    }
+
+    .list-layout .list-header,
+    .list-layout .media-entry {
+        grid-template-columns: 24px minmax(0, 1fr) 80px 45px;
+    }
+
+    .list-layout .media-entry {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .list-layout .media-title {
+        gap: 8px;
+        min-width: 0;
+    }
+
+    .list-layout .media-title-info {
+        min-width: 0;
+    }
+
+    /* Compact status labels and scores */
+
+    .list-layout .status-column .status {
+        font-size: 10px;
+        padding: 4px 6px;
+        line-height: 1.2;
+    }
+
+    .list-layout .score-column .score {
+        font-size: 11px;
+    }
+
+    .list-layout .status-column,
+    .list-layout .score-column {
+        min-width: 0;
+    }
+
+    .page-content {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+}

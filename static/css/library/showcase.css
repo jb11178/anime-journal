@@ -162,3 +162,99 @@
 .showcase-layout .score {
     color: var(--gallery-overlay-text);
 }
+
+
+
+/* Mobile Showcase layout */
+
+@media (max-width: 768px) {
+
+    .showcase-layout.density-compact .media-entry {
+        height: 140px;
+    }
+
+    .showcase-layout.density-comfortable .media-entry {
+        height: 180px;
+    }
+
+    .showcase-layout.density-spacious .media-entry {
+        height: 220px;
+    }
+
+    /* Score */
+
+    .showcase-layout .score-column {
+        top: 12px;
+        left: 12px;
+    }
+
+    .showcase-layout .score {
+        font-size: 16px;
+    }
+
+    /* Status */
+
+    .showcase-layout .status-column {
+        left: 12px;
+        bottom: 65px;
+    }
+
+    .showcase-layout .status {
+        font-size: 10px;
+        padding: 4px 6px;
+    }
+
+    /* Title and progress */
+
+    .showcase-layout .media-title-info {
+        left: 12px;
+        bottom: 12px;
+        max-width: calc(100% - 24px);
+    }
+
+    .showcase-layout .media-title-info a {
+        font-size: 17px;
+        line-height: 1.2;
+        letter-spacing: -0.3px;
+    }
+
+    .showcase-layout .media-title-info span {
+        font-size: 11px;
+        padding: 4px 0;
+    }
+
+    /* Preserve alternating alignment */
+
+    .showcase-layout .media-entry:nth-child(odd) .score-column,
+    .showcase-layout .media-entry:nth-child(odd) .status-column,
+    .showcase-layout .media-entry:nth-child(odd) .media-title-info {
+        left: auto;
+        right: 12px;
+    }
+
+    /* Keep title and progress on separate lines */
+
+    .showcase-layout .media-title-info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .showcase-layout .media-title-info a {
+        display: block;
+    }
+
+    .showcase-layout .media-title-info span {
+        display: block;
+        margin-top: 0;
+        padding: 0;
+    }
+
+    /* Preserve right alignment on alternating cards */
+
+    .showcase-layout .media-entry:nth-child(odd) .media-title-info {
+        align-items: flex-end;
+    }
+
+}

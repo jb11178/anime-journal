@@ -269,3 +269,81 @@
 .ember-preview span:nth-child(1) { background: #30221e; }
 .ember-preview span:nth-child(2) { background: #e89b62; }
 .ember-preview span:nth-child(3) { background: #f6e9dc; }
+
+/* Mobile navigation */
+
+@media (max-width: 768px) {
+
+    .navigation-bar {
+        height: auto;
+        flex-wrap: wrap;
+
+        padding: 16px;
+        gap: 16px;
+    }
+
+    .site-name {
+        font-size: 15px;
+        letter-spacing: -0.5px;
+
+        margin-right: auto;
+    }
+
+    .navigation-links {
+        order: 3;
+
+        width: 100%;
+        justify-content: space-between;
+
+        gap: 8px;
+    }
+
+    .search-bar {
+        order: 4;
+
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .search-bar input {
+        width: 100%;
+    }
+
+    .nav-theme-picker {
+        margin-left: 0;
+    }
+
+    .nav-logout-form {
+        margin-left: 0;
+    }
+
+    .navigation-links {
+        gap: 4px;
+    }
+
+    .navigation-links a {
+        font-size: 12px;
+    }
+
+    .navigation-bar {
+        column-gap: 8px;
+    }
+
+    .nav-theme-picker {
+        margin-left: 0;
+        flex-shrink: 0;
+    }
+
+    .nav-logout-form {
+        margin-left: 0;
+        flex-shrink: 0;
+    }
+
+    .nav-logout-button {
+        padding: 8px 4px;
+        font-size: 13px;
+        gap: 4px;
+    }
+
+}
+

@@ -420,3 +420,68 @@
 
     margin-top: 24px;
 }
+
+/*=======================================================================
+    RESPONSIVE LAYOUT
+=======================================================================*/
+
+@media (max-width: 768px) {
+
+    .media-details {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 32px;
+        padding: 24px 16px;
+    }
+
+    .media-poster-column,
+    .media-info-column {
+        min-width: 0;
+    }
+
+        /* Mobile banner */
+
+    .media-hero {
+        height: auto;
+        aspect-ratio: 1.6 / 1;
+
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    .media-hero-content {
+        left: 16px;
+        right: 16px;
+        bottom: 24px;
+    }
+
+    .media-hero-content h1 {
+        font-size: 28px;
+        line-height: 1.2;
+        letter-spacing: -0.5px;
+        overflow-wrap: anywhere;
+    }
+
+    .media-type {
+        font-size: 11px;
+        margin-bottom: 8px;
+    }
+
+    .media-subtitle {
+        font-size: 14px;
+        line-height: 1.4;
+    }
+
+    /* Mobile entry statistics */
+
+    .entry-stat {
+        padding: 16px 10px;
+        min-width: 0;
+    }
+
+    .stat-value {
+        font-size: 15px;
+        overflow-wrap: anywhere;
+    }
+
+}
