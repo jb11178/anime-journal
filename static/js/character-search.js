@@ -4,7 +4,7 @@ for (let button of addCharacterButtons) {
     button.addEventListener('click', async function() {
         const characterId = button.dataset.characterId;
 
-        const response = await fetch(
+        const response = await csrfFetch(
             `/api/characters/${characterId}`,
             {
                 method: 'POST'

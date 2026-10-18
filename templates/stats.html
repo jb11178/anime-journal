@@ -89,6 +89,7 @@
                         <div class="stats-profile-details">
                             <div class="stats-profile-header">
                                 <form action="{{ url_for('upload_profile_picture') }}" method="POST" enctype="multipart/form-data" class="stats-profile-upload">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                     <label for="profile-picture-input" class="stats-profile-avatar" title="Change profile picture">
                                         {% if profile.profile_image %}
                                             <img src="{{ profile.profile_image }}" alt="Profile picture">
@@ -416,6 +417,7 @@
                 </div>
 
                 <form action="{{ url_for('update_profile_favorites') }}" method="POST" class="stats-favorites-form" id="stats-favorites-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <label for="favorite-anime">Favorite Anime</label>
                     <select id="favorite-anime" name="favorite_anime_id">
                         <option value="">None selected</option>

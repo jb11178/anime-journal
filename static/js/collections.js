@@ -79,7 +79,7 @@ async function openEditCollectionEditor() {
     const collectionId = currentCollectionId;
 
     try {
-        const response = await fetch(`/api/collections/${collectionId}`);
+        const response = await csrfFetch(`/api/collections/${collectionId}`);
         const data = await response.json();
 
         if (!response.ok) {
@@ -328,7 +328,7 @@ async function saveCollection() {
 
         const method = isEditing ? 'PUT' : 'POST';
 
-        const response = await fetch(url, {
+        const response = await csrfFetch(url, {
             method: method,
             headers: {
                 'Content-Type': 'application/json'
@@ -354,7 +354,7 @@ async function saveCollection() {
 
             formData.append('image', selectedImage);
 
-            const imageResponse = await fetch(
+            const imageResponse = await csrfFetch(
                 `/api/collections/${result.collection_id}/image`,
                 {
                     method: 'POST',
@@ -396,7 +396,7 @@ async function deleteCollection() {
     collectionDetailsDeleteButton.disabled = true;
 
     try {
-        const response = await fetch(
+        const response = await csrfFetch(
             `/api/collections/${currentCollectionId}`,
             {
                 method: 'DELETE'
@@ -427,7 +427,7 @@ async function openCollectionDetails(collectionId) {
     currentCollectionId = null;
 
     try {
-        const response = await fetch(`/api/collections/${collectionId}`);
+        const response = await csrfFetch(`/api/collections/${collectionId}`);
 
         if (!response.ok) {
             throw new Error('Failed to load collection.');

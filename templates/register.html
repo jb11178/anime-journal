@@ -23,6 +23,7 @@
         <p>Start cataloging your favorite anime and manga.</p>
 
         <form action="{{ url_for('register') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
             <div class="auth-field">
                 <label for="name">Display Name</label>

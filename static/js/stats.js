@@ -983,7 +983,7 @@ function initializeDashboardDragging() {
             );
 
             try {
-                const response = await fetch("/api/stats/card-order", {
+                const response = await csrfFetch("/api/stats/card-order", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -996,8 +996,6 @@ function initializeDashboardDragging() {
                 if (!response.ok) {
                     throw new Error("Failed to save dashboard order");
                 }
-
-                console.log("Dashboard order saved successfully");
 
             } catch (error) {
                 console.error("Error saving dashboard order:", error);
@@ -1063,7 +1061,7 @@ function initializeDashboardCustomization() {
             checkbox.disabled = true;
 
             try {
-                const response = await fetch(
+                const response = await csrfFetch(
                     "/api/stats/card-visibility",
                     {
                         method: "POST",
@@ -1080,8 +1078,6 @@ function initializeDashboardCustomization() {
                 if (!response.ok) {
                 throw new Error("Failed to save card visibility");
                 }
-
-                console.log(`Visibility saved for ${cardId}`);
 
             } catch (error) {
                 console.error(error);

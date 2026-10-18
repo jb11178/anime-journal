@@ -76,7 +76,7 @@ for (let button of saveCharacterButtons) {
         const selectedImage = imageInput.files[0];
 
         try {
-            const response = await fetch(
+            const response = await csrfFetch(
                 `/api/characters/${characterId}/name`,
                 {
                     method: 'PATCH',
@@ -101,7 +101,7 @@ for (let button of saveCharacterButtons) {
             characterName.textContent = data.custom_name || editButton.dataset.originalName;
 
             if (newPosition !== oldPosition) {
-                const rankResponse = await fetch(
+                const rankResponse = await csrfFetch(
                     `/api/characters/${characterId}/rank`,
                     {
                         method: 'PATCH',
@@ -129,7 +129,7 @@ for (let button of saveCharacterButtons) {
 
                 formData.append('image', selectedImage);
 
-                const imageResponse = await fetch(
+                const imageResponse = await csrfFetch(
                     `/api/characters/${characterId}/image`,
                     {
                         method: 'POST',
@@ -202,7 +202,7 @@ for (let button of restoreImageButtons) {
         const characterImage = card.querySelector('.character-image');
 
         try {
-            const response = await fetch(
+            const response = await csrfFetch(
                 `/api/characters/${characterId}/image`,
                 {
                     method: 'DELETE'
@@ -342,7 +342,7 @@ confirmRemoveButton.addEventListener('click', async function() {
     confirmRemoveButton.disabled = true;
 
     try {
-        const response = await fetch(
+        const response = await csrfFetch(
             `/api/characters/${characterId}`,
             { method: 'DELETE' }
         );
@@ -816,7 +816,7 @@ function initializePodiumDragging() {
             const newPosition = Number(card.dataset.position);
 
             try {
-                const response = await fetch(
+                const response = await csrfFetch(
                     `/api/characters/${characterId}/rank`,
                     {
                         method: 'PATCH',

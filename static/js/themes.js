@@ -49,7 +49,7 @@ function initializeThemePicker() {
 
             // Save the preference to the user's account
             try {
-                const response = await fetch("/settings/theme", {
+                const response = await csrfFetch("/settings/theme", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"

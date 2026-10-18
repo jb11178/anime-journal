@@ -1,6 +1,7 @@
 import requests
 import sqlite3
 from flask import Flask, render_template, request, current_app, url_for, jsonify, abort, session, redirect, g, flash, send_from_directory
+from flask_wtf.csrf import CSRFProtect
 import os
 from pathlib import Path
 from uuid import uuid4
@@ -17,6 +18,9 @@ load_dotenv()
 
 # Initialization
 app = Flask(__name__, static_folder=None)
+
+csrf = CSRFProtect()
+csrf.init_app(app)
 
 app.secret_key = os.environ["SECRET_KEY"]
 
@@ -1326,8 +1330,6 @@ def update_character_rank(character_id):
     character_ids.remove(character_id)
 
     character_ids.insert(new_position - 1, character_id)
-
-    print("New order:", character_ids)
 
     for position, current_character_id in enumerate(character_ids, start=1):
         db.execute("""

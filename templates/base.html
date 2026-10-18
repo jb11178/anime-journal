@@ -5,6 +5,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
         {% if not session.get("user_id") %}
         <script>
@@ -117,6 +118,7 @@
             </div>
 
             <form class="nav-logout-form" action="{{ url_for('logout') }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button type="submit" class="nav-logout-button">
                     <i class="icon icon-log-out" aria-hidden="true"></i>
                     <span>Log Out</span>
@@ -129,9 +131,10 @@
 
         {% block content %}{% endblock %}
 
-        {% block scripts %}{% endblock %}
-
+        <script src="{{ url_for('static', filename='js/csrf.js') }}"></script>
         <script src="{{ url_for('static', filename='js/themes.js') }}"></script>
+        
+        {% block scripts %}{% endblock %}
 
     </body>
 

@@ -163,7 +163,7 @@ cancelNotesButton.addEventListener('click', function() {
 saveNotesButton.addEventListener('click', async function() {
     const updatedNotes = notesInput.value.trim();
 
-    const response = await fetch(`/api/entries/${anilistId}/notes`, {
+    const response = await csrfFetch(`/api/entries/${anilistId}/notes`, {
         method: "PATCH",
 
         headers: {
@@ -255,7 +255,7 @@ saveEntryButton.addEventListener('click', async function() {
 
     const requestMethod = userHasEntry ? "PUT" : "POST";
 
-    const response = await fetch(`/api/entries/${anilistId}`, {
+    const response = await csrfFetch(`/api/entries/${anilistId}`, {
         method: requestMethod, 
 
         headers: {
@@ -298,7 +298,7 @@ saveEntryButton.addEventListener('click', async function() {
 
 //remove entry button, removes entry from user table
 removeEntryButton.addEventListener('click', async function() {
-    const response = await fetch(`/api/entries/${anilistId}`, {
+    const response = await csrfFetch(`/api/entries/${anilistId}`, {
         method: "DELETE"
     });
 
